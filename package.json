@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-	"lint": "eslint ."
+	"dev": "nodemon server.js",
+    "lint": "eslint ."
   },
   "author": "Julius Lubys",
   "license": "SEE LICENSE IN LICENSE.md",
@@ -15,6 +16,7 @@
     "graphql": "^15.5.0"
   },
   "devDependencies": {
-    "eslint": "^7.25.0"
+    "eslint": "^7.25.0",
+    "nodemon": "^2.0.7"
   }
 }

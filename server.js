@@ -1,15 +1,17 @@
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, gql, UserInputError } = require('apollo-server')
+const { v1: uuid } = require('uuid')
+
 
 let phones = [
 	{
 		name: 'Apple iPhone 12 Pro 128GB',
 		description: '6.1" Super Retina Display, Triple Rear Camera, 3D LiDAR Sensor, 5G, Face ID',
+		brand: 'Apple',
+		insideTheBox: ['Smartphone', 'Charging Cable', 'Sim card remover'],
 		onePrice: 100,
 		threePrice: 75,
 		sixPrice: 60,
 		twelvePrice: 50,
-		brand: 'Apple',
-		insideTheBox: ['Smartphone', 'Charging Cable', 'Sim card remover'],
 		sim: 'Single Sim',
 		memory: '6',
 		battery: '2815',
@@ -29,50 +31,50 @@ let phones = [
 ]
 
 const typeDefs = gql`
-  type Phone {
-	name: String!,
-	description: String!,
-	insideTheBox: [String!]!,
-	prices: PhonePrices!
-	brand: String!,
-	underTheHood: UnderTheHood!,
-    id: ID!
-	variants: [Variant!]!
+  type Query {
+    allPhones: [Phone!]!
+	findPhone(name: String!): Phone
   }
 
-  type Variant {
+  input VariantsInput {
 	color: String!,
 	unitsInTheWarehouse: Int!
   }
 
-  type PhonePrices {
-	onePrice: Int!,
-	threePrice: Int!,
-	sixPrice: Int!,
-	twelvePrice: Int!
-  }
-
-  type UnderTheHood {
-	sim: String!,
-	memory: String!,
-	battery: String!,
-	display: String!,
-	storage: String!,
-	processor: String!,
-	dimensions: String!,
-	rearCamera: String!,
-	frontCamera: String!,
-	opearatingSystem: String!,
-  }
-
-  type Query {
-    allPhones: [Phone!]!
+  type Mutation {
+	addPhone(
+		name: String!,
+		description: String!,
+		brand: String!,
+		insideTheBox: [String!]!,
+		onePrice: Int!,
+		threePrice: Int!,
+		sixPrice: Int!,
+		twelvePrice: Int!,
+		sim: String!,
+		memory: String!,
+		battery: String!,
+		display: String!,
+		storage: String!,
+		processor: String!,
+		dimensions: String!,
+		rearCamera: String!,
+		frontCamera: String!,
+		opearatingSystem: String!,
+		variants: [VariantsInput!]!
+	): Phone
+	editQuantity(
+		name: String!
+		color: String!
+		quantity: Int!
+	): Phone
   }
 `
 
 const resolvers = {
 	Query: {
 		allPhones: () => phones,
+		findPhone: (root, args) => phones.find(p => p.name.includes(args.name))
 	},
 	Phone: {
 		prices: (root) => {
@@ -98,6 +100,28 @@ const resolvers = {
 			}
 		}
 	},
+	Mutation: {
+		addPhone: (root, args) => {
+			if (phones.find(p => p.name === args.name)) {
+				throw new UserInputError('Name must be unique', {
+					invalidArgs: args.name,
+				})
+			}
+			const phone = { ...args, id: uuid() }
+			phones = phones.concat(phone)
+			return phone
+		},
+		editQuantity: (root, args) => {
+			const phoneToEdit = phones.find(p => p.name === args.name)
+			if (!phoneToEdit) {
+				return null
+			}
+			const editedVariants = phoneToEdit.variants.map(variant => variant.color === args.color ? { ...variant, unitsInTheWarehouse: variant.unitsInTheWarehouse + args.quantity } : variant)
+			const updatedPhone = { ...phoneToEdit, variants: editedVariants }
+			phones = phones.map(phone => phone.name === args.name ? updatedPhone : phone)
+			return updatedPhone
+		}
+	}
 }
 
 const server = new ApolloServer({
