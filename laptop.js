@@ -26,7 +26,7 @@ const LaptopTypeDefs = gql`
 
 	type LaptopSpecs {
 		model: String,
-		memory: String!,
+		memory: Int!,
 		display: String!,
 		storage: String!,
 		graphics: String!,
@@ -51,7 +51,7 @@ const LaptopTypeDefs = gql`
 		sixPrice: Int!,
 		twelvePrice: Int!,
 		model: String,
-		memory: String!,
+		memory: Int!,
 		display: String!,
 		storage: String!,
 		graphics: String!,
@@ -61,7 +61,6 @@ const LaptopTypeDefs = gql`
 		keyboardLanguage: String!,
 		variants: [LaptopVariantsInput!]!
 	}
-
 `
 
 const LaptopResolvers = {
