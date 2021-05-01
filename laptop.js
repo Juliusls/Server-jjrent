@@ -1,48 +1,47 @@
 const { gql } = require('apollo-server')
 
-const PhoneTypeDefs = gql`
-	type Phone {
+const LaptopTypeDefs = gql`
+	type Laptop {
 		name: String!,
 		description: String!,
 		brand: String!,
 		insideTheBox: [String!]!,
 		prices: PhonePrices!
-		phoneSpecs: PhoneSpecs!,
+		laptopSpecs: LaptopSpecs!,
 		id: ID!
-		variants: [PhoneVariant!]!
+		variants: [LaptopVariant!]!
 	}
 
-	type PhoneVariant {
+	type LaptopVariant {
 		color: String!,
 		unitsInTheWarehouse: Int!
 	}
 
-	type PhonePrices {
+	type LaptopPrices {
 		onePrice: Int!,
 		threePrice: Int!,
 		sixPrice: Int!,
 		twelvePrice: Int!
 	}
 
-	type PhoneSpecs {
-		sim: String!,
+	type LaptopSpecs {
+		model: String,
 		memory: String!,
-		battery: String!,
 		display: String!,
 		storage: String!,
+		graphics: String!,
 		processor: String!,
 		dimensions: String!,
-		rearCamera: String!,
-		frontCamera: String!,
 		operatingSystem: String!,
+		keyboardLanguage: String!,
 	}
 	
-	input PhoneVariantsInput {
+	input LaptopVariantsInput {
 		color: String!,
 		unitsInTheWarehouse: Int!
 	}
 
-	input PhoneInput {
+	input LaptopInput {
 		name: String!,
 		description: String!,
 		brand: String!,
@@ -51,22 +50,22 @@ const PhoneTypeDefs = gql`
 		threePrice: Int!,
 		sixPrice: Int!,
 		twelvePrice: Int!,
-		sim: String!,
+		model: String,
 		memory: String!,
-		battery: String!,
 		display: String!,
 		storage: String!,
+		graphics: String!,
 		processor: String!,
 		dimensions: String!,
-		rearCamera: String!,
-		frontCamera: String!,
 		operatingSystem: String!,
-		variants: [PhoneVariantsInput!]!
+		keyboardLanguage: String!,
+		variants: [LaptopVariantsInput!]!
 	}
+
 `
 
-const PhoneResolvers = {
-	Phone: {
+const LaptopResolvers = {
+	Laptop: {
 		prices: (root) => {
 			return {
 				onePrice: root.onePrice,
@@ -75,21 +74,20 @@ const PhoneResolvers = {
 				twelvePrice: root.twelvePrice,
 			}
 		},
-		phoneSpecs: (root) => {
+		laptopSpecs: (root) => {
 			return {
-				sim: root.sim,
+				model: root.model,
 				memory: root.memory,
-				battery: root.battery,
 				display: root.display,
 				storage: root.storage,
+				graphics: root.graphics,
 				processor: root.processor,
 				dimensions: root.dimensions,
-				rearCamera: root.rearCamera,
-				frontCamera: root.frontCamera,
 				operatingSystem: root.operatingSystem,
+				keyboardLanguage: root.keyboardLanguage,
 			}
 		}
-	},
+	}
 }
 
-module.exports = { PhoneTypeDefs, PhoneResolvers }
+module.exports = { LaptopTypeDefs, LaptopResolvers }

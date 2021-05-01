@@ -1,6 +1,7 @@
-const { ApolloServer, gql, UserInputError } = require('apollo-server')
+const { ApolloServer, gql, UserInputError, makeExecutableSchema } = require('apollo-server')
 const { v1: uuid } = require('uuid')
-
+const { PhoneTypeDefs, PhoneResolvers } = require('./phone')
+const { LaptopTypeDefs, LaptopResolvers } = require('./laptop')
 
 let phones = [
 	{
@@ -21,97 +22,88 @@ let phones = [
 		dimensions: '14.7 x 7.2 x 0.74 cm • 0.19 kg',
 		rearCamera: '12MP + 12MP + 12MP',
 		frontCamera: '12MP',
-		opearatingSystem: 'iOS14',
+		operatingSystem: 'iOS14',
 		id: '3d599470-3436-11e9-bc57-8b80ba54c431',
 		variants: [ 
-			{color: 'Pacific Blue',  unitsInTheWarehouse: 10}, 
-			{color: 'Silver',  unitsInTheWarehouse: 7}
+			{ color: 'Pacific Blue',  unitsInTheWarehouse: 10 }, 
+			{ color: 'Silver',  unitsInTheWarehouse: 7 }
 		]
 	}
 ]
 
-const typeDefs = gql`
-  type Query {
-    allPhones: [Phone!]!
-	findPhone(name: String!): Phone
-  }
+let laptops = [
+	{
+		name: 'Apple MacBook Air (Late 2020) Laptop - Apple M1 - 8GB - 256GB SSD - Apple Integrated 7-core GPU',
+		description: '13.3", Keyboard - German',
+		brand: 'Apple',
+		insideTheBox: ['Laptop', 'Power adapter', 'Charging cable'],
+		onePrice: 100,
+		threePrice: 75,
+		sixPrice: 60,
+		twelvePrice: 50,
+		memory: '8',
+		display: '13.3 inches (2560 x 1600)',
+		storage: '256GB SSD',
+		graphics: 'Apple Integrated 7-core GPU',
+		processor: 'Apple M1',
+		dimensions: '30.41 x 21.24 x 1.61 cm • 1.29 kg',
+		operatingSystem: 'macOs Big Sur',
+		keyboardLanguage: 'Finnish',
+		id: '3d599470-3436-11e9-bc57-8b80ba54c431',
+		variants: [ 
+			{ color: 'Silver',  unitsInTheWarehouse: 2 }, 
+			{ color: 'Gold',  unitsInTheWarehouse: 3 },
+			{ color: 'Space Grey',  unitsInTheWarehouse: 1 }
+		]
+	}
+]
 
-  input VariantsInput {
-	color: String!,
-	unitsInTheWarehouse: Int!
-  }
+const MainTypeDefs = gql`
+	type Query {
+		allPhones: [Phone!]!
+		findPhone(name: String!): Phone
 
-  type Mutation {
-	addPhone(
-		name: String!,
-		description: String!,
-		brand: String!,
-		insideTheBox: [String!]!,
-		onePrice: Int!,
-		threePrice: Int!,
-		sixPrice: Int!,
-		twelvePrice: Int!,
-		sim: String!,
-		memory: String!,
-		battery: String!,
-		display: String!,
-		storage: String!,
-		processor: String!,
-		dimensions: String!,
-		rearCamera: String!,
-		frontCamera: String!,
-		opearatingSystem: String!,
-		variants: [VariantsInput!]!
-	): Phone
-	editQuantity(
-		name: String!
-		color: String!
-		quantity: Int!
-	): Phone
-  }
+		allLaptops: [Laptop!]!
+		findLaptop(name: String!): Laptop
+	}
+
+	type Mutation {
+		addPhone(input: PhoneInput): Phone
+		editPhonesQuantity(
+			name: String!
+			color: String!
+			quantity: Int!
+		): Phone
+
+		addLaptop(input: LaptopInput): Laptop
+		editLaptopsQuantity(
+			name: String!
+			color: String!
+			quantity: Int!
+		): Laptop
+	}
 `
 
-const resolvers = {
+const MainResolvers = {
 	Query: {
 		allPhones: () => phones,
-		findPhone: (root, args) => phones.find(p => p.name.includes(args.name))
-	},
-	Phone: {
-		prices: (root) => {
-			return {
-				onePrice: root.onePrice,
-				threePrice: root.threePrice,
-				sixPrice: root.sixPrice,
-				twelvePrice: root.twelvePrice,
-			}
-		},
-		underTheHood: (root) => {
-			return {
-				sim: root.sim,
-				memory: root.memory,
-				battery: root.battery,
-				display: root.display,
-				storage: root.storage,
-				processor: root.processor,
-				dimensions: root.dimensions,
-				rearCamera: root.rearCamera,
-				frontCamera: root.frontCamera,
-				opearatingSystem: root.opearatingSystem,
-			}
-		}
+		findPhone: (root, args) => phones.find(p => p.name.includes(args.name)),
+
+		allLaptops: () => laptops,
+		findLaptop: (root, args) => laptops.find(p => p.name.includes(args.name))
 	},
 	Mutation: {
 		addPhone: (root, args) => {
-			if (phones.find(p => p.name === args.name)) {
+			if (phones.find(p => p.name === args.input.name)) {
 				throw new UserInputError('Name must be unique', {
-					invalidArgs: args.name,
+					invalidArgs: args.input.name,
 				})
 			}
-			const phone = { ...args, id: uuid() }
+			const phone = { ...args.input, id: uuid() }
 			phones = phones.concat(phone)
 			return phone
 		},
-		editQuantity: (root, args) => {
+		editPhonesQuantity: (root, args) => {
 			const phoneToEdit = phones.find(p => p.name === args.name)
 			if (!phoneToEdit) {
 				return null
@@ -120,14 +112,38 @@ const resolvers = {
 			const updatedPhone = { ...phoneToEdit, variants: editedVariants }
 			phones = phones.map(phone => phone.name === args.name ? updatedPhone : phone)
 			return updatedPhone
-		}
+		},
+
+		addLaptop: (root, args) => {
+			if (laptops.find(p => p.name === args.input.name)) {
+				throw new UserInputError('Name must be unique', {
+					invalidArgs: args.input.name,
+				})
+			}
+			const laptop = { ...args.input, id: uuid() }
+			laptops = laptops.concat(laptop)
+			return laptop
+		},
+
+		editLaptopsQuantity: (root, args) => {
+			const laptopToEdit = laptops.find(p => p.name === args.name)
+			if (!laptopToEdit) {
+				return null
+			}
+			const editedVariants = laptopToEdit.variants.map(variant => variant.color === args.color ? { ...variant, unitsInTheWarehouse: variant.unitsInTheWarehouse + args.quantity } : variant)
+			const updatedLaptop = { ...laptopToEdit, variants: editedVariants }
+			laptops = laptops.map(laptop => laptop.name === args.name ? updatedLaptop : laptop)
+			return updatedLaptop
+		},
 	}
 }
 
-const server = new ApolloServer({
-	typeDefs,
-	resolvers,
+const schema = makeExecutableSchema({
+	typeDefs: [ MainTypeDefs, PhoneTypeDefs, LaptopTypeDefs ],
+	resolvers: [ MainResolvers, PhoneResolvers, LaptopResolvers ],
 })
+
+const server = new ApolloServer({ schema })
 
 server.listen().then(({ url }) => {
 	console.log(`Server ready at ${url}`)
