@@ -58,7 +58,6 @@ const MainResolvers = {
 				})
 			}
 			let phone = new Phone({ ...args.input })
-			console.log('new phone', phone)
 			try {
 				await phone.save()
 			} catch (error) {
@@ -69,12 +68,13 @@ const MainResolvers = {
 			return phone
 		},
 		editPhonesQuantity: async (root, args) => {
-			const phone = await Phone.findOne({ name: args.input.name})
+			const phone = await Phone.findOne({ name: args.name })
 			if (!phone) {
 				return null
 			}
-			const editedVariants = phone.variants.map(variant => variant.color === args.color ? { ...variant, unitsInTheWarehouse: variant.unitsInTheWarehouse + args.quantity } : variant)
-			phone.variants = editedVariants
+			const editedPhoneVariants = phone.variants.map(variant => variant.color === args.color ? { color: variant.color, unitsInTheWarehouse: variant.unitsInTheWarehouse + args.quantity } : variant)
+			phone.variants = editedPhoneVariants
+
 			try {
 				await phone.save()
 			} catch (error) {
@@ -93,7 +93,6 @@ const MainResolvers = {
 				})
 			}
 			let laptop = new Laptop({ ...args.input })
-			console.log('new laptop', laptop)
 			try {
 				await laptop.save()
 			} catch (error) {
@@ -105,12 +104,13 @@ const MainResolvers = {
 
 		},
 		editLaptopsQuantity: async (root, args) => {
-			const laptop = await Laptop.findOne({ name: args.input.name})
+			const laptop = await Laptop.findOne({ name: args.name })
 			if (!laptop) {
 				return null
 			}
-			const editedVariants = laptop.variants.map(variant => variant.color === args.color ? { ...variant, unitsInTheWarehouse: variant.unitsInTheWarehouse + args.quantity } : variant)
-			laptop.variants = editedVariants
+			const editedLaptopVariants = laptop.variants.map(variant => variant.color === args.color ? { color: variant.color, unitsInTheWarehouse: variant.unitsInTheWarehouse + args.quantity } : variant)
+			laptop.variants = editedLaptopVariants
+
 			try {
 				await laptop.save()
 			} catch (error) {
