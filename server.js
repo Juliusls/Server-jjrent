@@ -3,8 +3,10 @@ const mongoose = require('mongoose')
 const config = require('./utils/config')
 const Phone = require('./models/phone')
 const Laptop = require('./models/laptop')
+const Watch = require('./models/watch')
 const { PhoneTypeDefs, PhoneResolvers } = require('./phone')
 const { LaptopTypeDefs, LaptopResolvers } = require('./laptop')
+const { WatchTypeDefs, WatchResolvers } = require('./watch')
 
 console.log('connecting to', config.MONGODB_URI)
 
@@ -18,14 +20,16 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology
 
 const MainTypeDefs = gql`
 	type Query {
-		allPhones: [Phone!]!
+		allPhones: [Phone!]
 		findPhone(name: String!): Phone
 
-		allLaptops: [Laptop!]!
+		allLaptops: [Laptop!]
 		findLaptop(name: String!): Laptop
 	}
 
 	type Mutation {
+		addWatch(input: WatchInput!): Watch!
+
 		addPhone(input: PhoneInput): Phone
 		editPhonesQuantity(
 			name: String!
@@ -46,11 +50,27 @@ const MainResolvers = {
 	Query: {
 		allPhones: () => Phone.find({}),
 		// findPhone: async (root, args) => Phone.findOne({ name: args.name}),
-
 		allLaptops: () => Laptop.find({}),
 		// findLaptop: (root, args) => Laptop.findOne({ name: args.name}),
 	},
 	Mutation: {
+		addWatch: async (root, args) => {
+			if (await Phone.findOne({ name: args.input.name })) {
+				throw new UserInputError('Name must be unique', {
+					invalidArgs: args.input.name,
+				})
+			}
+			let watch = new Watch({ ...args.input })
+			try {
+				await watch.save()
+			} catch (error) {
+				throw new UserInputError(error.message, {
+					invalidArgs: args,
+				})
+			}
+			return watch
+		},
+
 		addPhone: async (root, args) => {
 			if (await Phone.findOne({ name: args.input.name })) {
 				throw new UserInputError('Name must be unique', {
@@ -124,8 +144,8 @@ const MainResolvers = {
 }
 
 const schema = makeExecutableSchema({
-	typeDefs: [ MainTypeDefs, PhoneTypeDefs, LaptopTypeDefs ],
-	resolvers: [ MainResolvers, PhoneResolvers, LaptopResolvers ],
+	typeDefs: [ MainTypeDefs, PhoneTypeDefs, LaptopTypeDefs, WatchTypeDefs ],
+	resolvers: [ MainResolvers, PhoneResolvers, LaptopResolvers, WatchResolvers ],
 })
 
 const server = new ApolloServer({ schema })
