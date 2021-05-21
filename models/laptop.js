@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const laptopSchema = new mongoose.Schema({
-	name: {
+	laptopName: {
 		type: String,
 		required: true,
 		unique: true,
@@ -92,6 +92,21 @@ const laptopSchema = new mongoose.Schema({
 			},
 			unitsInTheWarehouse: {
 				type: Number,
+				minlength: 2,
+				required: true
+			},
+			_id: false,
+		}
+	],
+	imageIds: [
+		{
+			imageName: {
+				type: String,
+				minlength: 2,
+				required: true
+			},
+			publicId: {
+				type: String,
 				minlength: 2,
 				required: true
 			},

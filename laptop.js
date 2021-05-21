@@ -2,19 +2,15 @@ const { gql } = require('apollo-server')
 
 const LaptopTypeDefs = gql`
 	type Laptop {
-		name: String!,
+		laptopName: String!,
 		description: String!,
 		brand: String!,
 		insideTheBox: [String!]!,
-		prices: PhonePrices!
+		laptopPrices: PhonePrices!
 		laptopSpecs: LaptopSpecs!,
 		id: ID!
 		variants: [LaptopVariant!]!
-	}
-
-	type LaptopVariant {
-		color: String!,
-		unitsInTheWarehouse: Int!
+		imageIds: [LaptopImageObj!]!
 	}
 
 	type LaptopPrices {
@@ -35,14 +31,30 @@ const LaptopTypeDefs = gql`
 		operatingSystem: String!,
 		keyboardLanguage: String!,
 	}
-	
-	input LaptopVariantsInput {
+
+	type LaptopVariant {
 		color: String!,
 		unitsInTheWarehouse: Int!
 	}
 
+	type LaptopImageObj {
+		imageName: String!,
+		publicId: String!
+	}
+
+	
+	input LaptopVariantInput {
+		color: String!,
+		unitsInTheWarehouse: Int!
+	}
+
+	input LaptopImageObjInput {
+		imageName: String!,
+		publicId: String!
+	}
+
 	input LaptopInput {
-		name: String!,
+		laptopName: String!,
 		description: String!,
 		brand: String!,
 		insideTheBox: [String!]!,
@@ -59,13 +71,14 @@ const LaptopTypeDefs = gql`
 		dimensions: String!,
 		operatingSystem: String!,
 		keyboardLanguage: String!,
-		variants: [LaptopVariantsInput!]!
+		variants: [LaptopVariantInput!]!
+		imageIds: [LaptopImageObjInput!]!
 	}
 `
 
 const LaptopResolvers = {
 	Laptop: {
-		prices: (root) => {
+		laptopPrices: (root) => {
 			return {
 				onePrice: root.onePrice,
 				threePrice: root.threePrice,

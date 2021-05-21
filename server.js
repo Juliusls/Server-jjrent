@@ -20,6 +20,8 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology
 
 const MainTypeDefs = gql`
 	type Query {
+		allWatches: [Watch!]
+
 		allPhones: [Phone!]
 		findPhone(name: String!): Phone
 
@@ -28,7 +30,7 @@ const MainTypeDefs = gql`
 	}
 
 	type Mutation {
-		addWatch(input: WatchInput!): Watch!
+		addWatch(input: WatchInput): Watch
 
 		addPhone(input: PhoneInput): Phone
 		editPhonesQuantity(
@@ -48,6 +50,8 @@ const MainTypeDefs = gql`
 
 const MainResolvers = {
 	Query: {
+		allWatches: () => Watch.find({}),
+		// findLaptop: (root, args) => Laptop.findOne({ name: args.name}),
 		allPhones: () => Phone.find({}),
 		// findPhone: async (root, args) => Phone.findOne({ name: args.name}),
 		allLaptops: () => Laptop.find({}),
@@ -55,9 +59,9 @@ const MainResolvers = {
 	},
 	Mutation: {
 		addWatch: async (root, args) => {
-			if (await Phone.findOne({ name: args.input.name })) {
+			if (await Phone.findOne({ watchName: args.input.watchName })) {
 				throw new UserInputError('Name must be unique', {
-					invalidArgs: args.input.name,
+					invalidArgs: args.input.watchName,
 				})
 			}
 			let watch = new Watch({ ...args.input })
@@ -107,9 +111,9 @@ const MainResolvers = {
 
 
 		addLaptop: async (root, args) => {
-			if (await Laptop.findOne({ name: args.input.name })) {
+			if (await Laptop.findOne({ laptopName: args.input.laptopName })) {
 				throw new UserInputError('Name must be unique', {
-					invalidArgs: args.input.name,
+					invalidArgs: args.input.laptopName,
 				})
 			}
 			let laptop = new Laptop({ ...args.input })
