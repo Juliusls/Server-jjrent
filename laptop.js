@@ -42,17 +42,6 @@ const LaptopTypeDefs = gql`
 		publicId: String!
 	}
 
-	
-	input LaptopVariantInput {
-		color: String!,
-		unitsInTheWarehouse: Int!
-	}
-
-	input LaptopImageObjInput {
-		imageName: String!,
-		publicId: String!
-	}
-
 	input LaptopInput {
 		laptopName: String!,
 		description: String!,
@@ -73,6 +62,16 @@ const LaptopTypeDefs = gql`
 		keyboardLanguage: String!,
 		variants: [LaptopVariantInput!]!
 		imageIds: [LaptopImageObjInput!]!
+	}
+
+	input LaptopVariantInput {
+		color: String!,
+		unitsInTheWarehouse: Int!
+	}
+
+	input LaptopImageObjInput {
+		imageName: String!,
+		publicId: String!
 	}
 `
 

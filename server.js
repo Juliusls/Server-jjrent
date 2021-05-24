@@ -23,10 +23,10 @@ const MainTypeDefs = gql`
 		allWatches: [Watch!]
 
 		allPhones: [Phone!]
-		findPhone(name: String!): Phone
+		findPhone(phoneName: String!): Phone
 
 		allLaptops: [Laptop!]
-		findLaptop(name: String!): Laptop
+		findLaptop(laptopName: String!): Laptop
 	}
 
 	type Mutation {
@@ -34,14 +34,14 @@ const MainTypeDefs = gql`
 
 		addPhone(input: PhoneInput): Phone
 		editPhonesQuantity(
-			name: String!
+			phoneName: String!
 			color: String!
 			quantity: Int!
 		): Phone
 
 		addLaptop(input: LaptopInput): Laptop
 		editLaptopsQuantity(
-			name: String!
+			laptopName: String!
 			color: String!
 			quantity: Int!
 		): Laptop
@@ -51,7 +51,8 @@ const MainTypeDefs = gql`
 const MainResolvers = {
 	Query: {
 		allWatches: () => Watch.find({}),
-		// findLaptop: (root, args) => Laptop.findOne({ name: args.name}),
+		findLaptop: (root, args) => Laptop.findOne({ name: args.name}),
+
 		allPhones: () => Phone.find({}),
 		// findPhone: async (root, args) => Phone.findOne({ name: args.name}),
 		allLaptops: () => Laptop.find({}),
@@ -76,9 +77,9 @@ const MainResolvers = {
 		},
 
 		addPhone: async (root, args) => {
-			if (await Phone.findOne({ name: args.input.name })) {
+			if (await Phone.findOne({ phoneName: args.input.phoneName })) {
 				throw new UserInputError('Name must be unique', {
-					invalidArgs: args.input.name,
+					invalidArgs: args.input.phoneName,
 				})
 			}
 			let phone = new Phone({ ...args.input })
@@ -92,7 +93,7 @@ const MainResolvers = {
 			return phone
 		},
 		editPhonesQuantity: async (root, args) => {
-			const phone = await Phone.findOne({ name: args.name })
+			const phone = await Phone.findOne({ phoneName: args.phoneName })
 			if (!phone) {
 				return null
 			}
@@ -128,7 +129,7 @@ const MainResolvers = {
 
 		},
 		editLaptopsQuantity: async (root, args) => {
-			const laptop = await Laptop.findOne({ name: args.name })
+			const laptop = await Laptop.findOne({ laptopName: args.laptopName })
 			if (!laptop) {
 				return null
 			}

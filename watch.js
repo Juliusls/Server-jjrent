@@ -43,17 +43,6 @@ const WatchTypeDefs = gql`
 		imageName: String!,
 		publicId: String!
 	}
-	
-
-	input WatchVariantInput {
-		color: String!,
-		unitsInTheWarehouse: Int!
-	}
-
-	input WatchImageObjInput {
-		imageName: String!,
-		publicId: String!
-	}
 
 	input WatchInput {
 		watchName: String!,
@@ -77,6 +66,16 @@ const WatchTypeDefs = gql`
 		activityTracking: String!,
 		variants: [WatchVariantInput!]!
 		imageIds: [WatchImageObjInput!]!
+	}
+
+	input WatchVariantInput {
+		color: String!,
+		unitsInTheWarehouse: Int!
+	}
+
+	input WatchImageObjInput {
+		imageName: String!,
+		publicId: String!
 	}
 `
 

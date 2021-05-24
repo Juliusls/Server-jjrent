@@ -2,14 +2,15 @@ const { gql } = require('apollo-server')
 
 const PhoneTypeDefs = gql`
 	type Phone {
-		name: String!,
+		phoneName: String!,
 		description: String!,
 		brand: String!,
 		insideTheBox: [String!]!,
-		prices: PhonePrices!
+		phonePrices: PhonePrices!
 		phoneSpecs: PhoneSpecs!,
 		id: ID!
 		variants: [PhoneVariant!]!
+		imageIds: [PhoneImageObj!]!
 	}
 
 	type PhoneVariant {
@@ -36,14 +37,14 @@ const PhoneTypeDefs = gql`
 		frontCamera: String!,
 		operatingSystem: String!,
 	}
-	
-	input PhoneVariantsInput {
-		color: String!,
-		unitsInTheWarehouse: Int!
+
+	type PhoneImageObj {
+		imageName: String!,
+		publicId: String!
 	}
 
 	input PhoneInput {
-		name: String!,
+		phoneName: String!,
 		description: String!,
 		brand: String!,
 		insideTheBox: [String!]!,
@@ -62,12 +63,23 @@ const PhoneTypeDefs = gql`
 		frontCamera: String!,
 		operatingSystem: String!,
 		variants: [PhoneVariantsInput!]!
+		imageIds: [PhoneImageObjInput!]!
+	}
+
+	input PhoneVariantsInput {
+		color: String!,
+		unitsInTheWarehouse: Int!
+	}
+
+	input PhoneImageObjInput {
+		imageName: String!,
+		publicId: String!
 	}
 `
 
 const PhoneResolvers = {
 	Phone: {
-		prices: (root) => {
+		phonePrices: (root) => {
 			return {
 				onePrice: root.onePrice,
 				threePrice: root.threePrice,

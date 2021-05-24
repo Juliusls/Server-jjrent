@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const phoneSchema = new mongoose.Schema({
-	name: {
+	phoneName: {
 		type: String,
 		required: true,
 		unique: true,
@@ -98,6 +98,21 @@ const phoneSchema = new mongoose.Schema({
 			},
 			unitsInTheWarehouse: {
 				type: Number,
+				minlength: 2,
+				required: true
+			},
+			_id: false,
+		}
+	],
+	imageIds: [
+		{
+			imageName: {
+				type: String,
+				minlength: 2,
+				required: true
+			},
+			publicId: {
+				type: String,
 				minlength: 2,
 				required: true
 			},
