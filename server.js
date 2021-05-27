@@ -29,6 +29,13 @@ const MainTypeDefs = gql`
 		findLaptop(laptopName: String!): Laptop
 	}
 
+	type Prices {
+		onePrice: Int!,
+		threePrice: Int!,
+		sixPrice: Int!,
+		twelvePrice: Int!
+	}
+
 	type Mutation {
 		addWatch(input: WatchInput): Watch
 

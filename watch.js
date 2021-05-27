@@ -6,18 +6,11 @@ const WatchTypeDefs = gql`
 		description: String!,
 		brand: String!,
 		insideTheBox: [String!]!,
-		watchPrices: WatchPrices!
+		prices: Prices!
 		watchSpecs: WatchSpecs!,
 		id: ID!
 		variants: [WatchVariant!]!
 		imageIds: [WatchImageObj!]!
-	}
-
-	type WatchPrices {
-		onePrice: Int!,
-		threePrice: Int!,
-		sixPrice: Int!,
-		twelvePrice: Int!
 	}
 
 	type WatchSpecs {
@@ -81,7 +74,7 @@ const WatchTypeDefs = gql`
 
 const WatchResolvers = {
 	Watch: {
-		watchPrices: (root) => {
+		prices: (root) => {
 			return {
 				onePrice: root.onePrice,
 				threePrice: root.threePrice,

@@ -6,7 +6,7 @@ const PhoneTypeDefs = gql`
 		description: String!,
 		brand: String!,
 		insideTheBox: [String!]!,
-		phonePrices: PhonePrices!
+		prices: Prices!
 		phoneSpecs: PhoneSpecs!,
 		id: ID!
 		variants: [PhoneVariant!]!
@@ -16,13 +16,6 @@ const PhoneTypeDefs = gql`
 	type PhoneVariant {
 		color: String!,
 		unitsInTheWarehouse: Int!
-	}
-
-	type PhonePrices {
-		onePrice: Int!,
-		threePrice: Int!,
-		sixPrice: Int!,
-		twelvePrice: Int!
 	}
 
 	type PhoneSpecs {
@@ -79,7 +72,7 @@ const PhoneTypeDefs = gql`
 
 const PhoneResolvers = {
 	Phone: {
-		phonePrices: (root) => {
+		prices: (root) => {
 			return {
 				onePrice: root.onePrice,
 				threePrice: root.threePrice,

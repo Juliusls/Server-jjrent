@@ -6,18 +6,11 @@ const LaptopTypeDefs = gql`
 		description: String!,
 		brand: String!,
 		insideTheBox: [String!]!,
-		laptopPrices: PhonePrices!
+		prices: Prices!
 		laptopSpecs: LaptopSpecs!,
 		id: ID!
 		variants: [LaptopVariant!]!
 		imageIds: [LaptopImageObj!]!
-	}
-
-	type LaptopPrices {
-		onePrice: Int!,
-		threePrice: Int!,
-		sixPrice: Int!,
-		twelvePrice: Int!
 	}
 
 	type LaptopSpecs {
@@ -77,7 +70,7 @@ const LaptopTypeDefs = gql`
 
 const LaptopResolvers = {
 	Laptop: {
-		laptopPrices: (root) => {
+		prices: (root) => {
 			return {
 				onePrice: root.onePrice,
 				threePrice: root.threePrice,
