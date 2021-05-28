@@ -21,12 +21,13 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology
 const MainTypeDefs = gql`
 	type Query {
 		allWatches: [Watch!]
+		findWatch(id: String!): Watch
 
 		allPhones: [Phone!]
-		findPhone(phoneName: String!): Phone
+		findPhone(id: String!): Phone
 
 		allLaptops: [Laptop!]
-		findLaptop(laptopName: String!): Laptop
+		findLaptop(id: String!): Laptop
 	}
 
 	type Prices {
@@ -58,12 +59,13 @@ const MainTypeDefs = gql`
 const MainResolvers = {
 	Query: {
 		allWatches: () => Watch.find({}),
-		findLaptop: (root, args) => Laptop.findOne({ name: args.name}),
+		findWatch: (root, args) => Watch.findOne({ _id: args.id }),
 
 		allPhones: () => Phone.find({}),
-		// findPhone: async (root, args) => Phone.findOne({ name: args.name}),
+		findPhone: (root, args) => Phone.findOne({ _id: args.id }),
+
 		allLaptops: () => Laptop.find({}),
-		// findLaptop: (root, args) => Laptop.findOne({ name: args.name}),
+		findLaptop: (root, args) => Laptop.findOne({ _id: args.id })
 	},
 	Mutation: {
 		addWatch: async (root, args) => {
