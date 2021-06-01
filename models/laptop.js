@@ -90,6 +90,11 @@ const laptopSchema = new mongoose.Schema({
 				minlength: 2,
 				required: true
 			},
+			colorCode: {
+				type: String,
+				minlength: 2,
+				required: true
+			},
 			unitsInTheWarehouse: {
 				type: Number,
 				minlength: 2,

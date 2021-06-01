@@ -106,7 +106,7 @@ const MainResolvers = {
 			if (!phone) {
 				return null
 			}
-			const editedPhoneVariants = phone.variants.map(variant => variant.color === args.color ? { color: variant.color, unitsInTheWarehouse: variant.unitsInTheWarehouse + args.quantity } : variant)
+			const editedPhoneVariants = phone.variants.map(variant => variant.color === args.color ? { color: variant.color, colorCode: variant.colorCode, unitsInTheWarehouse: variant.unitsInTheWarehouse + args.quantity } : variant)
 			phone.variants = editedPhoneVariants
 
 			try {
@@ -142,7 +142,7 @@ const MainResolvers = {
 			if (!laptop) {
 				return null
 			}
-			const editedLaptopVariants = laptop.variants.map(variant => variant.color === args.color ? { color: variant.color, unitsInTheWarehouse: variant.unitsInTheWarehouse + args.quantity } : variant)
+			const editedLaptopVariants = laptop.variants.map(variant => variant.color === args.color ? { color: variant.color, colorCode: variant.colorCode, unitsInTheWarehouse: variant.unitsInTheWarehouse + args.quantity } : variant)
 			laptop.variants = editedLaptopVariants
 
 			try {

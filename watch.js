@@ -29,6 +29,7 @@ const WatchTypeDefs = gql`
 
 	type WatchVariant {
 		color: String!,
+		colorCode: String!
 		unitsInTheWarehouse: Int!
 	}
 
@@ -63,6 +64,7 @@ const WatchTypeDefs = gql`
 
 	input WatchVariantInput {
 		color: String!,
+		colorCode: String!
 		unitsInTheWarehouse: Int!
 	}
 

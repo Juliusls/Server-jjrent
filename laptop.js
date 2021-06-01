@@ -27,6 +27,7 @@ const LaptopTypeDefs = gql`
 
 	type LaptopVariant {
 		color: String!,
+		colorCode: String!
 		unitsInTheWarehouse: Int!
 	}
 
@@ -59,6 +60,7 @@ const LaptopTypeDefs = gql`
 
 	input LaptopVariantInput {
 		color: String!,
+		colorCode: String!
 		unitsInTheWarehouse: Int!
 	}
 

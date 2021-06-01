@@ -15,6 +15,7 @@ const PhoneTypeDefs = gql`
 
 	type PhoneVariant {
 		color: String!,
+		colorCode: String!
 		unitsInTheWarehouse: Int!
 	}
 
@@ -61,6 +62,7 @@ const PhoneTypeDefs = gql`
 
 	input PhoneVariantsInput {
 		color: String!,
+		colorCode: String!
 		unitsInTheWarehouse: Int!
 	}
 
