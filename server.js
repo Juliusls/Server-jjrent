@@ -13,6 +13,7 @@ console.log('connecting to', config.MONGODB_URI)
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
 	.then(() => {
 		console.log('connected to MongoDB')
+		// Phone.collection.updateMany({}, { $rename: { 'phoneName': 'name' } }, { multi: true }  )
 	})
 	.catch((error) => {
 		console.log('error connection to MongoDB:', error.message)
@@ -42,14 +43,14 @@ const MainTypeDefs = gql`
 
 		addPhone(input: PhoneInput): Phone
 		editPhonesQuantity(
-			phoneName: String!
+			name: String!
 			color: String!
 			quantity: Int!
 		): Phone
 
 		addLaptop(input: LaptopInput): Laptop
 		editLaptopsQuantity(
-			laptopName: String!
+			name: String!
 			color: String!
 			quantity: Int!
 		): Laptop
@@ -69,9 +70,9 @@ const MainResolvers = {
 	},
 	Mutation: {
 		addWatch: async (root, args) => {
-			if (await Phone.findOne({ watchName: args.input.watchName })) {
+			if (await Phone.findOne({ name: args.input.name })) {
 				throw new UserInputError('Name must be unique', {
-					invalidArgs: args.input.watchName,
+					invalidArgs: args.input.name,
 				})
 			}
 			let watch = new Watch({ ...args.input })
@@ -86,9 +87,9 @@ const MainResolvers = {
 		},
 
 		addPhone: async (root, args) => {
-			if (await Phone.findOne({ phoneName: args.input.phoneName })) {
+			if (await Phone.findOne({ name: args.input.name })) {
 				throw new UserInputError('Name must be unique', {
-					invalidArgs: args.input.phoneName,
+					invalidArgs: args.input.name,
 				})
 			}
 			let phone = new Phone({ ...args.input })
@@ -102,7 +103,7 @@ const MainResolvers = {
 			return phone
 		},
 		editPhonesQuantity: async (root, args) => {
-			const phone = await Phone.findOne({ phoneName: args.phoneName })
+			const phone = await Phone.findOne({ name: args.name })
 			if (!phone) {
 				return null
 			}
@@ -121,9 +122,9 @@ const MainResolvers = {
 
 
 		addLaptop: async (root, args) => {
-			if (await Laptop.findOne({ laptopName: args.input.laptopName })) {
+			if (await Laptop.findOne({ name: args.input.name })) {
 				throw new UserInputError('Name must be unique', {
-					invalidArgs: args.input.laptopName,
+					invalidArgs: args.input.name,
 				})
 			}
 			let laptop = new Laptop({ ...args.input })
@@ -138,7 +139,7 @@ const MainResolvers = {
 
 		},
 		editLaptopsQuantity: async (root, args) => {
-			const laptop = await Laptop.findOne({ laptopName: args.laptopName })
+			const laptop = await Laptop.findOne({ name: args.name })
 			if (!laptop) {
 				return null
 			}

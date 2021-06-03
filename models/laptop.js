@@ -1,11 +1,16 @@
 const mongoose = require('mongoose')
 
 const laptopSchema = new mongoose.Schema({
-	laptopName: {
+	name: {
 		type: String,
 		required: true,
 		unique: true,
 		minlength: 5
+	},
+	category: {
+		type: String,
+		minlength: 5,
+		required: true,
 	},
 	description: {
 		type: String,

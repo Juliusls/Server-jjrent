@@ -1,11 +1,16 @@
 const mongoose = require('mongoose')
 
 const phoneSchema = new mongoose.Schema({
-	phoneName: {
+	name: {
 		type: String,
 		required: true,
 		unique: true,
 		minlength: 5
+	},
+	category: {
+		type: String,
+		minlength: 5,
+		required: true,
 	},
 	description: {
 		type: String,

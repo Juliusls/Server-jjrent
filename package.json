@@ -15,7 +15,7 @@
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "graphql": "^15.5.0",
-    "mongoose": "^5.12.7",
+    "mongoose": "^5.12.12",
     "mongoose-unique-validator": "^2.0.3"
   },
   "devDependencies": {

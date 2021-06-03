@@ -2,7 +2,8 @@ const { gql } = require('apollo-server')
 
 const WatchTypeDefs = gql`
 	type Watch {
-		watchName: String!,
+		name: String!,
+		category: String!
 		description: String!,
 		brand: String!,
 		insideTheBox: [String!]!,
@@ -39,7 +40,8 @@ const WatchTypeDefs = gql`
 	}
 
 	input WatchInput {
-		watchName: String!,
+		name: String!,
+		category: String!
 		description: String!,
 		brand: String!,
 		insideTheBox: [String!]!,

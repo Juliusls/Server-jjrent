@@ -2,7 +2,8 @@ const { gql } = require('apollo-server')
 
 const PhoneTypeDefs = gql`
 	type Phone {
-		phoneName: String!,
+		name: String!,
+		category: String!
 		description: String!,
 		brand: String!,
 		insideTheBox: [String!]!,
@@ -38,7 +39,8 @@ const PhoneTypeDefs = gql`
 	}
 
 	input PhoneInput {
-		phoneName: String!,
+		name: String!,
+		category: String!
 		description: String!,
 		brand: String!,
 		insideTheBox: [String!]!,

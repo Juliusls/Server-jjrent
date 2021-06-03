@@ -2,7 +2,8 @@ const { gql } = require('apollo-server')
 
 const LaptopTypeDefs = gql`
 	type Laptop {
-		laptopName: String!,
+		name: String!,
+		category: String!
 		description: String!,
 		brand: String!,
 		insideTheBox: [String!]!,
@@ -37,7 +38,8 @@ const LaptopTypeDefs = gql`
 	}
 
 	input LaptopInput {
-		laptopName: String!,
+		name: String!,
+		category: String!
 		description: String!,
 		brand: String!,
 		insideTheBox: [String!]!,
